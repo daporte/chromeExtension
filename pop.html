@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        input[type="submit"] {
+            background: black;
+            color: white;
+            padding: 10px 35px;
+            display: block;
+            margin: 5px auto;
+        }
+    </style>
+    <script src="jquery.min.js"></script>
+
+</head>
+<body>
+    <script src="pop.js"></script>
+    <h3>Enter details plz</h3>
+
+
+    <form action="http://localhost/db1/categoryScript.php" method="POST">
+        <input type="submit">
+    </form>
+
+    <form action="http://localhost/db1/categoryCreateScript.php" method="POST">
+        <input type="text" name="name" placeholder="Category name"><br>
+        <input type="submit">
+    </form>
+
+    <form action="http://localhost/db1/playlist2.php" method="POST" id="playlistForm">
+
+    </form>
+
+    <input id="stopButton" type="button" value="STOP">
+
+
+
+</body>
+</html>

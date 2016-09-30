@@ -1,0 +1,44 @@
+{
+  "manifest_version": 2,
+
+  "name": "Getting started example",
+  "description": "This extension shows a Google Image search result for the current page",
+  "version": "1.0",
+
+  "icons": {
+    "64": "icon.png"
+  },
+  "browser_action":{
+    "default_popup":"pop.html"
+
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*/*",
+        "http://*/*"
+      ],
+      "js": ["jquery.min.js"]
+    }]
+  ,
+
+  "background":{
+    "scripts": ["background.js", "jquery.min.js"]
+  },
+  "content_security_policy": "script-src 'self' https://*.youtube.com https://s.ytimg.com https://code.jquery.com/ui/1.12.1/jquery-ui.js 'self'"
+  ,
+  "permissions":[
+    "notifications",
+    "contextMenus",
+    "tabs",
+    "activeTab",
+    "storage",
+    "<all_urls>",
+    "*://*/*",
+    "http://*/*","https://*/*"
+
+
+  ]
+
+
+}
