@@ -9,6 +9,8 @@ var removedItems = {};
 
 notifId = -1;
 
+
+
 $.get("http://localhost/db1/backup2.php", function (data) {
 
     $submit = $("<br><input type='submit' value='Submit'><br>")
@@ -17,10 +19,10 @@ $.get("http://localhost/db1/backup2.php", function (data) {
 
 
 
-    $.get("http://localhost/db1/getNotifs.php", function (data) {
+    $.get("http://localhost/db1/getNotifs.php", function (notifs) {
         //console.log(data)
 
-        $.each($.parseJSON(data), function (index, value) {
+        $.each($.parseJSON(notifs), function (index, value) {
             console.log("anchorzz")
             console.log(value);
             var categoryIds = value["CategoryIds"];
@@ -59,6 +61,7 @@ $.get("http://localhost/db1/backup2.php", function (data) {
 
     })
 
+
     $.each($.parseJSON(data), function (index, value) {
 
         var id = value["Id"];
@@ -72,6 +75,7 @@ $.get("http://localhost/db1/backup2.php", function (data) {
 
     console.log("categoryMap");
     console.log(categoryMap);
+    console.log($.parseJSON(data));
 
     $.each($.parseJSON(data), function (x, node) {
 
@@ -100,6 +104,8 @@ $.get("http://localhost/db1/backup2.php", function (data) {
     $.each(tree["SubCategories"], function(index, node){
         createCheckbox("", node);
     })
+
+    setCategoryListSortable("root");
 
 
 
@@ -474,7 +480,7 @@ function createCheckbox(superIndex, value){
 
     if(!$("#ul_"+superIndex).length) {
         console.log("isnt supre")
-        $("#catForm").append($newdiv1);
+        $("#ul_root").append($newdiv1);
         $("#li_"+index).prepend($checkbox);
     } else {
         console.log("issupper")
@@ -508,8 +514,12 @@ function createCheckbox(superIndex, value){
             console.log(superCategoryIds);
 
 
+            if(notifMap[superCategoryIds[1]]){
+                var superCategoryNotifs = Object.keys(notifMap[superCategoryIds[1]]);
+            } else {
+                superCategoryNotifs = []
+            }
 
-            var superCategoryNotifs = Object.keys(notifMap[superCategoryIds[1]]);
 
             $.each(superCategoryIds, function(xx, categoryId){
 
@@ -799,7 +809,28 @@ function setCategoryListSortable(index){
         tolerance: "pointer",
         remove: function (event, currentCategory){
 
-            currentCategory.item.clone().appendTo("#ul_"+index);
+            var theId = currentCategory["item"][0]["value"]
+            var superCategoryIdArray = index.split("x")
+            var superCategoryId = superCategoryIdArray[superCategoryIdArray.length-1];
+
+            if(event.shiftKey){
+                currentCategory.item.clone().appendTo("#ul_"+index);
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost/db1/unlinkTreeCategory.php",
+                    data: {categoryId : theId,
+                        superCategoryId : superCategoryId},
+
+                    //dataType: "json",
+
+                    success: function (data) {
+                        console.log("ajax done")
+                        console.log(data)
+                    }
+                });
+            }
+
         },
         receive: function(event, currentCategory){
 
